@@ -1,0 +1,5 @@
+django
+django-stubs
+djangorestframework
+djangorestframework-stubs
+psycopg2
