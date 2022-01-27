@@ -19,12 +19,14 @@ class UsersView(APIView):
 
     def get(self, request: Request, format=None):
         """get info about all users"""
+        # TODO: add pagination
 
         serializer = UserSerializer(User.objects.all(), many=True)
         return Response(serializer.data)
 
     def post(self, request: Request, format=None):
         """create user"""
+        # TODO: add captcha
 
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
