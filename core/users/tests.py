@@ -12,7 +12,7 @@ class UsersTests(APITestCase):
     def test_get_no_users(self):
         response = self.client.get("/users/", format="json")
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.json(), [])
+        self.assertEquals(response.json(), {"count": 0, "next": None, "previous": None, "results": []})
 
     def test_create_user(self):
         response = self.client.post("/users/", {"username": "u", "password": "1215"}, format="json")
@@ -21,8 +21,9 @@ class UsersTests(APITestCase):
 
         response = self.client.get("/users/", format="json")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()), 1)
-        user_data = response.json()[0]
+        data = response.json()["results"]
+        self.assertEqual(len(data), 1)
+        user_data = data[0]
         self.assertEqual(user_data["username"], "u")
         self.assertEqual(user_data["is_stuff"], False)
         self.assertEqual(user_data["info"], "")

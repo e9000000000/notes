@@ -17,9 +17,9 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "username": string,
-    "password": string,
-    "info": string (optional)
+    "username": "string",
+    "password": "string",
+    "info": "string (optional)"
 }
 ```
 
@@ -34,8 +34,8 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "username": string,
-    "password": string,
+    "username": "string",
+    "password": "string",
 }
 ```
 
@@ -57,19 +57,26 @@ all urls start with `/users`
 ## get users list
 ### request
 - GET:  `/`
+#### params
+- `page` - page number
 
 ### response
 ```json
-[
-    {
-        "id": int,
-        "username": string,
-        "info": string,
-        "is_stuff": bool,
-        "registration_date": date
-    },
-    ...
-]
+{
+    "count": "int",
+    "next": "url to next page or null",
+    "previous": "url to previous page or null",
+    "results": [
+        {
+            "id": "int",
+            "username": "string",
+            "info": "string",
+            "is_stuff": "bool",
+            "registration_date": "date"
+        },
+        ...
+    ]
+}
 ```
 
 ## get user details
@@ -79,11 +86,11 @@ all urls start with `/users`
 ### response
 ```json
 {
-    "id": int,
-    "username": string,
-    "info": string,
-    "is_stuff": bool,
-    "registration_date": date
+    "id": "int",
+    "username": "string",
+    "info": "string",
+    "is_stuff": "bool",
+    "registration_date": "date"
 }
 ```
 
@@ -94,19 +101,19 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "username": string (optional),
-    "info": string (optional),
+    "username": "string (optional)",
+    "info": "string (optional)",
 }
 ```
 
 ### response
 ```json
 {
-    "id": int,
-    "username": string,
-    "info": string,
-    "is_stuff": bool,
-    "registration_date": date
+    "id": "int",
+    "username": "string",
+    "info": "string",
+    "is_stuff": "bool",
+    "registration_date": "date"
 }
 ```
 
@@ -117,8 +124,8 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "old_password": string,
-    "new_password": string
+    "old_password": "string",
+    "new_password": "string"
 }
 ```
 

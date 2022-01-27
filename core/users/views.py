@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.exceptions import NotFound, NotAuthenticated
+from rest_framework.exceptions import NotFound, NotAuthenticated, APIException
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.settings import api_settings
+from rest_framework.pagination import PageNumberPagination
 
 from .permissions import IsSelfOrReadOnly, IsAdmin, Any, IfObjAdminReadOnly
 from .serializers import UserSerializer, ChangeUserPasswordSerializer
@@ -16,13 +18,24 @@ User = get_user_model()
 
 class UsersView(APIView):
     permission_classes = [Any]
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
     def get(self, request: Request, format=None):
         """get info about all users"""
-        # TODO: add pagination
 
-        serializer = UserSerializer(User.objects.all(), many=True)
-        return Response(serializer.data)
+        queryset = User.objects.all().order_by("username")
+
+        if self.pagination_class:
+            paginator = self.pagination_class()
+            page = paginator.paginate_queryset(queryset, request, view=self)
+            if page is None:
+                return APIException("can't paginate.")
+            serializer = UserSerializer(page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+        else:
+            serializer = UserSerializer(queryset, many=True)
+            return Response(serializer.data)
+
 
     def post(self, request: Request, format=None):
         """create user"""
