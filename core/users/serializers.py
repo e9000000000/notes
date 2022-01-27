@@ -9,9 +9,7 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ["id", "username", "info", "is_stuff", "registration_date", "password"]
         read_only_fields = ["id", "is_stuff", "registration_date"]
-        extra_kwargs = {
-            "password": {"write_only": True}
-        }
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
         if self.instance and "password" in data:
@@ -23,6 +21,7 @@ class UserSerializer(ModelSerializer):
         instance.set_password(validated_data["password"])
         instance.save()
         return instance
+
 
 class ChangeUserPasswordSerializer(Serializer):
     model = User

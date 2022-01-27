@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "core"
+version = "0.1.0"
+description = "core api"
+authors = ["e9000000000 <a@a.a>"]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+Django = "*"
+djangorestframework = "*"
+psycopg2 = "*"
+django-rest-captcha = { git = "https://github.com/e9000000000/django-rest-captcha.git", branch = "master" }
+
+[tool.poetry.dev-dependencies]
+django-stubs = "*"
+djangorestframework-stubs = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

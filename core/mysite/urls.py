@@ -17,5 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 from users import urls as users_urls
+from rest_captcha.views import RestCaptchaView
 
-urlpatterns = [path("admin/", admin.site.urls), path("users/", include(users_urls))]
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("users/", include(users_urls)),
+    path("captcha/", RestCaptchaView.as_view()),
+]

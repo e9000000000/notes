@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     # third party
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_captcha",
     # my
     "users",
 ]

@@ -3,23 +3,40 @@
 - `content-type: application/json;`
 - `Autentification: Token {token}`
 
-
 ## url variables
 - `format=json`
+
+
+# Captcha
+### request
+- POST: `/captcha/`
+
+### response
+```json
+{
+    "captcha_key": "type: uuid4",
+    "captcha_image": "type: base64 encoded png image",
+    "image_type": "image/png",
+    "image_decode": "base64"
+}
+```
 
 
 # Users
 all urls start with `/users`
 
 ## create new user
+need to solve captcha before create
 ### request
 - POST: `/`
 - DATA:
 ```json
 {
-    "username": "string",
-    "password": "string",
-    "info": "string (optional)"
+    "username": "type: string",
+    "password": "type: string",
+    "capthca_key": "type: uuid4",
+    "capthca_value": "type: string",
+    "info": "type: string (optional)"
 }
 ```
 
@@ -34,8 +51,8 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "username": "string",
-    "password": "string",
+    "username": "type: string",
+    "password": "type: string",
 }
 ```
 
@@ -68,11 +85,11 @@ all urls start with `/users`
     "previous": "url to previous page or null",
     "results": [
         {
-            "id": "int",
-            "username": "string",
-            "info": "string",
-            "is_stuff": "bool",
-            "registration_date": "date"
+            "id": "type: int",
+            "username": "type: string",
+            "info": "type: string",
+            "is_stuff": "type: bool",
+            "registration_date": "type: date"
         },
         ...
     ]
@@ -86,11 +103,11 @@ all urls start with `/users`
 ### response
 ```json
 {
-    "id": "int",
-    "username": "string",
-    "info": "string",
-    "is_stuff": "bool",
-    "registration_date": "date"
+    "id": "type: int",
+    "username": "type: string",
+    "info": "type: string",
+    "is_stuff": "type: bool",
+    "registration_date": "type: date"
 }
 ```
 
@@ -101,19 +118,19 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "username": "string (optional)",
-    "info": "string (optional)",
+    "username": "type: string (optional)",
+    "info": "type: string (optional)",
 }
 ```
 
 ### response
 ```json
 {
-    "id": "int",
-    "username": "string",
-    "info": "string",
-    "is_stuff": "bool",
-    "registration_date": "date"
+    "id": "type: int",
+    "username": "type: string",
+    "info": "type: string",
+    "is_stuff": "type: bool",
+    "registration_date": "type: date"
 }
 ```
 
@@ -124,8 +141,8 @@ all urls start with `/users`
 - DATA:
 ```json
 {
-    "old_password": "string",
-    "new_password": "string"
+    "old_password": "type: string",
+    "new_password": "type: string"
 }
 ```
 

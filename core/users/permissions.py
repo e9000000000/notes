@@ -21,11 +21,14 @@ class IsAdmin(BasePermission):
     def has_object_permission(self, request: Request, view, obj):
         return self.has_permission(request, view)
 
+
 class IfObjAdminReadOnly(BasePermission):
     message = "can't edit/delete admin users"
 
     def has_object_permission(self, request: Request, view, obj):
-        return request.method in SAFE_METHODS or type(obj) is not User or not obj.is_stuff
+        return (
+            request.method in SAFE_METHODS or type(obj) is not User or not obj.is_stuff
+        )
 
 
 class Any(BasePermission):
