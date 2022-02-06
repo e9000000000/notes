@@ -1,6 +1,0 @@
-django
-django-stubs
-djangorestframework
-djangorestframework-stubs
-django-rest-captcha
-psycopg2

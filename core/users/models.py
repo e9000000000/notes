@@ -32,7 +32,9 @@ class CustomUser(AbstractBaseUser):
         default=False,
         help_text="is user admin or not.",
     )
-    registration_date = models.DateTimeField("registration date", auto_now=True)
+    registration_date = models.DateTimeField(
+        "registration date", auto_now=True, editable=False
+    )
 
     USERNAME_FIELD = "username"
     objects = UserManager()

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "rest_captcha",
     # my
     "users",
+    "notes",
 ]
 
 MIDDLEWARE = [

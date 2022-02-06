@@ -14,6 +14,7 @@ django-rest-captcha = { git = "https://github.com/e9000000000/django-rest-captch
 [tool.poetry.dev-dependencies]
 django-stubs = "*"
 djangorestframework-stubs = "*"
+debugpy = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

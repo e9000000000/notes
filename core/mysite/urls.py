@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+import rest_captcha.urls as captcha_urls
 
-from users import urls as users_urls
-from rest_captcha.views import RestCaptchaView
+import users.urls as users_urls
+import notes.urls as notes_urls
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("captcha/", include(captcha_urls)),
     path("users/", include(users_urls)),
-    path("captcha/", RestCaptchaView.as_view()),
+    path("notes/", include(notes_urls)),
 ]

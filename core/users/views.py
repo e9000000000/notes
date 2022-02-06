@@ -46,13 +46,13 @@ class UsersView(APIView):
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
-        return Response({"success": 1})
+        return Response(serializer.data)
 
 
 class UserDetails(APIView):
     permission_classes = [IsAdmin | IsSelfOrReadOnly, IfObjAdminReadOnly]
 
-    def get_object(self, request, pk: int) -> User:
+    def get_object(self, request, pk: int, format=None) -> User:
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist as e:
