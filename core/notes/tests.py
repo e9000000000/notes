@@ -35,7 +35,9 @@ class NotesTests(APITestCase):
         self.u_note.save()
         self.another_u_note = Note(text="eafe", author=self.another_u)
         self.another_u_note.save()
-        self.another_u_public_note = Note(text="public", author=self.another_u, visibility=Note.BY_URL)
+        self.another_u_public_note = Note(
+            text="public", author=self.another_u, visibility=Note.BY_URL
+        )
         self.another_u_public_note.save()
 
     def test_get_list(self):
@@ -51,7 +53,9 @@ class NotesTests(APITestCase):
         self.assertEqual(data["visibility"], self.u_note.visibility)
 
     def test_create(self):
-        response = self.client.post("/notes/", {"text": "feef"}, **self.headers, format="json")
+        response = self.client.post(
+            "/notes/", {"text": "feef"}, **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertEqual(data["author"], self.u.pk)
@@ -59,12 +63,15 @@ class NotesTests(APITestCase):
         self.assertEqual(data["visibility"], self.u_note.visibility)
 
     def test_get_details_of_other_users_private_note(self):
-        response = self.client.get(f"/notes/{self.another_u_note.pk}/", **self.headers, format="json")
+        response = self.client.get(
+            f"/notes/{self.another_u_note.pk}/", **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 403)
 
-
     def test_get_details_of_other_users_public_note(self):
-        response = self.client.get(f"/notes/{self.another_u_public_note.pk}/", **self.headers, format="json")
+        response = self.client.get(
+            f"/notes/{self.another_u_public_note.pk}/", **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -73,10 +80,11 @@ class NotesTests(APITestCase):
         self.assertEqual(data["author"], note.author.pk)
         self.assertEqual(data["text"], note.text)
         self.assertEqual(data["visibility"], note.visibility)
-
 
     def test_get_details_of_users_public_note_no_auth(self):
-        response = self.client.get(f"/notes/{self.another_u_public_note.pk}/", format="json")
+        response = self.client.get(
+            f"/notes/{self.another_u_public_note.pk}/", format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -86,9 +94,10 @@ class NotesTests(APITestCase):
         self.assertEqual(data["text"], note.text)
         self.assertEqual(data["visibility"], note.visibility)
 
-
     def test_get_details_of_note(self):
-        response = self.client.get(f"/notes/{self.u_note.pk}/", **self.headers, format="json")
+        response = self.client.get(
+            f"/notes/{self.u_note.pk}/", **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         data = response.json()
@@ -98,32 +107,49 @@ class NotesTests(APITestCase):
         self.assertEqual(data["text"], note.text)
         self.assertEqual(data["visibility"], note.visibility)
 
-
     def test_update_delete_other_users_public_note(self):
-        response = self.client.delete(f"/notes/{self.another_u_public_note.pk}/", **self.headers, format="json")
+        response = self.client.delete(
+            f"/notes/{self.another_u_public_note.pk}/", **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 403)
 
-        response = self.client.patch(f"/notes/{self.another_u_public_note.pk}/", {"text": "patched"}, **self.headers, format="json")
+        response = self.client.patch(
+            f"/notes/{self.another_u_public_note.pk}/",
+            {"text": "patched"},
+            **self.headers,
+            format="json",
+        )
         self.assertEqual(response.status_code, 403)
 
         self.another_u_public_note.refresh_from_db()
         self.assertEqual(self.another_u_public_note.text, "public")
 
     def test_update_delete_note(self):
-        response = self.client.patch(f"/notes/{self.u_note.pk}/", {"author": 12}, **self.headers, format="json")
+        response = self.client.patch(
+            f"/notes/{self.u_note.pk}/", {"author": 12}, **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 400, response.json())
 
-        response = self.client.patch(f"/notes/{self.u_note.pk}/", {"id": "aa"}, **self.headers, format="json")
+        response = self.client.patch(
+            f"/notes/{self.u_note.pk}/", {"id": "aa"}, **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.patch(f"/notes/{self.u_note.pk}/", {"text": "patched", "visibility": "BU"}, **self.headers, format="json")
+        response = self.client.patch(
+            f"/notes/{self.u_note.pk}/",
+            {"text": "patched", "visibility": "BU"},
+            **self.headers,
+            format="json",
+        )
         self.assertEqual(response.status_code, 200)
 
         self.u_note.refresh_from_db()
         self.assertEqual(self.u_note.text, "patched")
         self.assertEqual(self.u_note.visibility, "BU", response.json())
 
-        response = self.client.delete(f"/notes/{self.u_note.pk}/", **self.headers, format="json")
+        response = self.client.delete(
+            f"/notes/{self.u_note.pk}/", **self.headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         try:
@@ -134,13 +160,17 @@ class NotesTests(APITestCase):
 
     def test_update_delete_private_note_as_admin(self):
         headers = get_auth_headers(self, "admin_u", "1215")
-        response = self.client.patch(f"/notes/{self.u_note.pk}/", {"text": "patched"}, **headers, format="json")
+        response = self.client.patch(
+            f"/notes/{self.u_note.pk}/", {"text": "patched"}, **headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         self.u_note.refresh_from_db()
         self.assertEqual(self.u_note.text, "patched")
 
-        response = self.client.delete(f"/notes/{self.u_note.pk}/", **headers, format="json")
+        response = self.client.delete(
+            f"/notes/{self.u_note.pk}/", **headers, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
         try:

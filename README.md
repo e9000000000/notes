@@ -1,10 +1,12 @@
 # notes
+- codestyle - black
+- database - postgresql
+
 simple notes written with django, django rest framework...
 captcha on registration
 
 only backend for now.
 
-database - postgresql
 
 
 ## run

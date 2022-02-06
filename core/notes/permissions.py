@@ -11,6 +11,6 @@ class IsAuthorOrReadOnlyIfNotPrivate(BasePermission):
     )
 
     def has_object_permission(self, request, view, obj):
-        return (
-            obj.visibility == obj.BY_URL and request.method in SAFE_METHODS
-        ) or (type(request.user) is User and obj.author == request.user)
+        return (obj.visibility == obj.BY_URL and request.method in SAFE_METHODS) or (
+            type(request.user) is User and obj.author == request.user
+        )

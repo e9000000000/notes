@@ -28,8 +28,9 @@ class NotesView(APIView):
         serializer.save(author=request.user)
         return Response(serializer.data)
 
+
 class NoteDetailsView(APIView):
-    permission_classes = [IsAdmin|IsAuthorOrReadOnlyIfNotPrivate]
+    permission_classes = [IsAdmin | IsAuthorOrReadOnlyIfNotPrivate]
 
     def get_object(self, request, pk: str, format=None) -> Note:
         try:
@@ -44,7 +45,6 @@ class NoteDetailsView(APIView):
                     message=getattr(permission, "message", None),
                 )
         return note
-
 
     def get(self, request: Request, pk, format=None):
         """get note details"""
