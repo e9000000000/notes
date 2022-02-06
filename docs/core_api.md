@@ -3,7 +3,7 @@
 `200`
 
 ## headers
-- `content-type: application/json;`
+- `content-application/json;`
 - `Autentification: Token {token}`
 
 ## url variables
@@ -17,9 +17,10 @@
 ```
 
 ## status codes
-- if you are not authenticated, but shoud be, it's be `403`
-- if object does not exist it's be `404`
-- if in PATCH, ... requests you send invalid data it's be `400`
+- if you are not authenticated, but shoud be - `401`
+- if you have no permissions - `403`
+- if object does not exist - `404`
+- if in PATCH, ... requests you send invalid data - `400`
 
 maybe something else
 
@@ -31,8 +32,8 @@ maybe something else
 ### response
 ```json
 {
-    "captcha_key": "type: uuid4",
-    "captcha_image": "type: base64 encoded png image",
+    "captcha_key": "uuid4",
+    "captcha_image": "base64 encoded png image",
     "image_type": "image/png",
     "image_decode": "base64"
 }
@@ -49,11 +50,11 @@ need to solve captcha before create
 - DATA:
 ```json
 {
-    "username": "type: string",
-    "password": "type: string",
-    "capthca_key": "type: uuid4",
-    "capthca_value": "type: string",
-    "info": "type: string (optional)"
+    "username": "string",
+    "password": "string",
+    "capthca_key": "uuid4",
+    "capthca_value": "string",
+    "info": "string (optional)"
 }
 ```
 
@@ -68,8 +69,8 @@ need to solve captcha before create
 - DATA:
 ```json
 {
-    "username": "type: string",
-    "password": "type: string",
+    "username": "string",
+    "password": "string",
 }
 ```
 
@@ -88,28 +89,19 @@ need to solve captcha before create
 {"success": 1}
 ```
 
-## get users list
+## get info about self
 ### request
-- GET:  `/`
-#### params
-- `page` - page number
+- GET:  `/self/`
+- permissions: authenticated
 
 ### response
 ```json
 {
-    "count": "int",
-    "next": "url to next page or null",
-    "previous": "url to previous page or null",
-    "results": [
-        {
-            "id": "type: int",
-            "username": "type: string",
-            "info": "type: string",
-            "is_stuff": "type: bool",
-            "registration_date": "type: date"
-        },
-        "..."
-    ]
+    "id": "int",
+    "username": "string",
+    "info": "string",
+    "is_stuff": "bool",
+    "registration_date": "date"
 }
 ```
 
@@ -120,11 +112,11 @@ need to solve captcha before create
 ### response
 ```json
 {
-    "id": "type: int",
-    "username": "type: string",
-    "info": "type: string",
-    "is_stuff": "type: bool",
-    "registration_date": "type: date"
+    "id": "int",
+    "username": "string",
+    "info": "string",
+    "is_stuff": "bool",
+    "registration_date": "date"
 }
 ```
 
@@ -135,19 +127,19 @@ need to solve captcha before create
 - DATA:
 ```json
 {
-    "username": "type: string (optional)",
-    "info": "type: string (optional)",
+    "username": "string (optional)",
+    "info": "string (optional)",
 }
 ```
 
 ### response
 ```json
 {
-    "id": "type: int",
-    "username": "type: string",
-    "info": "type: string",
-    "is_stuff": "type: bool",
-    "registration_date": "type: date"
+    "id": "int",
+    "username": "string",
+    "info": "string",
+    "is_stuff": "bool",
+    "registration_date": "date"
 }
 ```
 
@@ -158,8 +150,8 @@ need to solve captcha before create
 - DATA:
 ```json
 {
-    "old_password": "type: string",
-    "new_password": "type: string"
+    "old_password": "string",
+    "new_password": "string"
 }
 ```
 

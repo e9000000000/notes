@@ -17,12 +17,25 @@ def get_auth_headers(self, username: str, password: str):
 
 
 class UsersTests(APITestCase):
-    def test_get_no_users(self):
-        response = self.client.get("/users/", format="json")
-        self.assertEqual(response.status_code, 200)
-        self.assertEquals(
-            response.json(), {"count": 0, "next": None, "previous": None, "results": []}
+    def test_get_no_auth(self):
+        response = self.client.get("/users/self/", format="json")
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_with_auth(self):
+        user = User(username="user")
+        user.set_password("323")
+        user.save()
+        headers = get_auth_headers(self, "user", "323")
+
+        response = self.client.get(f"/users/self/", **headers, format="json")
+        data: dict = response.json()
+        self.assertEqual(
+            set(data), {"id", "username", "info", "is_stuff", "registration_date"}
         )
+        self.assertEqual(data["id"], user.pk)
+        self.assertEqual(data["username"], "user")
+        self.assertEqual(data["info"], "")
+        self.assertEqual(data["is_stuff"], False)
 
     def test_create_user_wrong_captcha(self):
         response = self.client.post(
@@ -55,14 +68,9 @@ class UsersTests(APITestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get("/users/", format="json")
-        self.assertEqual(response.status_code, 200)
-        data = response.json()["results"]
-        self.assertEqual(len(data), 1)
-        user_data = data[0]
-        self.assertEqual(user_data["username"], "u")
-        self.assertEqual(user_data["is_stuff"], False)
-        self.assertEqual(user_data["info"], "")
+        user = User.objects.get(username="u")
+        self.assertEqual(user.is_stuff, False)
+        self.assertEqual(user.info, "")
 
 
 class UserAuthTests(APITestCase):
