@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 import rest_captcha.urls as captcha_urls
 
+from .error_views import *
 import users.urls as users_urls
 import notes.urls as notes_urls
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),

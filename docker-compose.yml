@@ -2,6 +2,20 @@ version: '3.4'
 
 
 services:
+  nginx:
+    container_name: nginx
+    restart: on-failure
+    image: nginx
+    links:
+      - core
+    depends_on:
+      - core
+    ports:
+      - 80:80
+      - 443:433
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
   core:
     container_name: core
     build:
@@ -17,9 +31,6 @@ services:
       - POSTGRES_PASSWORD
       - NOTES_SECRET_KEY
       - NOTES_DB_NAME
-    ports:
-      - 127.0.0.1:8000:8000  # django port
-      - 127.0.0.1:5678:5678  # debug port
 
   postgres:
     container_name: postgres
