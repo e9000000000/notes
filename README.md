@@ -2,8 +2,8 @@
 - codestyle - black
 
 simple notes.  
-users can write something and share with another users if they want.  
-or make note private, so no one can see it.  
+users can write something and share with another users if they want.
+or make note private, so no one can see it.
 
 ## technology stack
 - webserver - nginx
