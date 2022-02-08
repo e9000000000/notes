@@ -1,12 +1,21 @@
 # notes
 - codestyle - black
+
+simple notes, users can write something and share with another users if they want.
+or make note private, so no one can see it.
+
+## technology stack
+- webserver - nginx
 - database - postgresql
 
-simple notes written with django, django rest framework...
-captcha on registration
+backend written with:
+- python3.10
+- django
+- django rest framework
+- rest_captcha (captcha on registration)
 
-only backend for now.
-
+frontend planned to write with:
+- react
 
 
 ## run
@@ -16,4 +25,4 @@ set vars:
 - `NOTES_SECRET_KEY` - django secret key
 - `NOTES_DB_NAME` - database name
 
-`docker-compose up`
+`docker-compose up --build`
