@@ -1,21 +1,20 @@
 # notes
 - codestyle - black
 
-simple notes, users can write something and share with another users if they want.
-or make note private, so no one can see it.
+simple notes.  
+users can write something and share with another users if they want.  
+or make note private, so no one can see it.  
 
 ## technology stack
 - webserver - nginx
 - database - postgresql
-
-backend written with:
-- python3.10
-- django
-- django rest framework
-- rest_captcha (captcha on registration)
-
-frontend planned to write with:
-- react
+- backend (finished)
+    - python3.10
+    - django
+    - django rest framework
+    - rest_captcha (captcha on registration)
+- frontend (in progress)
+    - react
 
 
 ## run
