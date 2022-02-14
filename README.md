@@ -16,9 +16,8 @@ or make note private, so no one can see it.
 - frontend (in progress)
     - react
 
-
 ## run
-set vars:
+set env variables:
 - `POSTGRES_USER` - database user name
 - `POSTGRES_PASSWORD` - database password
 - `NOTES_SECRET_KEY` - django secret key
