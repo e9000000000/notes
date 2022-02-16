@@ -1,8 +1,9 @@
 import React, { useState, setState } from 'react';
-import cookie from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 export default function GoLogin () {
 	const [username, setUsername] = useState('');
+	const [cookies, setCookie, removeCookie] = useCookies(['cookie-name']);
 
 	function login() {
 		var user = prompt('username', '');
@@ -21,6 +22,7 @@ export default function GoLogin () {
 			.then(response => response.json())
 			.then(data => {
 				console.log(data)
+				setCookie("token", data.token)
 				setUsername(user);
 			})
 	}
