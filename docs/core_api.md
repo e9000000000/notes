@@ -1,13 +1,12 @@
-# API
-## success status code
-`200`
+# Data format
+only `json`, if you sending data send it in `json` format and set header  
+`Content-Type: Application/json;`
 
-## headers
-- `content-application/json;`
-- `Autentification: Token {token}`
 
-## url variables
-- `format=json`
+# Authentication
+only token authentication  
+can be with header `Autentification: Token {token}`  
+or with cookies, so you need to set `token` cookie to you token
 
 
 # Errors
@@ -21,8 +20,7 @@
 - if you have no permissions - `403`
 - if object does not exist - `404`
 - if in PATCH, ... requests you send invalid data - `400`
-
-maybe something else
+- if server has a bug - `500`
 
 
 # Captcha
