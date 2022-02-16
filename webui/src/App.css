@@ -9,6 +9,11 @@ html {
   font-size: 18pt;
 }
 
+a {
+  text-decoration: none;
+  color: green;
+}
+
 header {
   padding: .1rem .6rem;
   background-color: #101010;
