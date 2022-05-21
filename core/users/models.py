@@ -21,17 +21,6 @@ class CustomUser(AbstractBaseUser):
             "unique": "a user with that username already exists.",
         },
     )
-    info = models.CharField(
-        "info",
-        max_length=600,
-        help_text="some info about user.",
-        default="",
-    )
-    is_stuff = models.BooleanField(
-        "admin status",
-        default=False,
-        help_text="is user admin or not.",
-    )
     registration_date = models.DateTimeField(
         "registration date", auto_now=True, editable=False
     )

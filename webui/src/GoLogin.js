@@ -45,7 +45,7 @@ export default function GoLogin () {
 
 	if (username) {
 		return (
-			<a href="/profile/">{username}</a>
+			<a to="/profile/">{username}</a>
 		)
 	} else {
 		return (

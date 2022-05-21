@@ -13,13 +13,15 @@ class CookieTokenAuthentication(BaseAuthentication):
         Cookie: token=401f7ac837da42b97f613d789819ff93537bee6a
     """
 
-    keyword = 'CookieToken'
+    # TODO: it's not working from swagger ui, but working from curl
+    keyword = "CookieToken"
     model = None
 
     def get_model(self):
         if self.model is not None:
             return self.model
         from rest_framework.authtoken.models import Token
+
         return Token
 
     """
@@ -38,12 +40,12 @@ class CookieTokenAuthentication(BaseAuthentication):
     def authenticate_credentials(self, key):
         model = self.get_model()
         try:
-            token = model.objects.select_related('user').get(key=key)
+            token = model.objects.select_related("user").get(key=key)
         except model.DoesNotExist:
-            raise AuthenticationFailed(_('Invalid token.'))
+            raise AuthenticationFailed(_("Invalid token."))
 
         if not token.user.is_active:
-            raise AuthenticationFailed(_('User inactive or deleted.'))
+            raise AuthenticationFailed(_("User inactive or deleted."))
 
         return (token.user, token)
 

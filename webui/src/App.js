@@ -1,12 +1,12 @@
-import './App.css';
+import './styles/App.css';
 import Header from './Header';
+import Notes from './Notes';
 
-function App() {
+export default () => {
 	return (
 		<div>
 			<Header />
+			<Notes />
 		</div>
 	);
 }
-
-export default App;

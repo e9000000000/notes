@@ -1,88 +1,131 @@
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.exceptions import NotFound, NotAuthenticated
+from rest_framework.exceptions import NotFound, NotAuthenticated, ValidationError
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
-from rest_captcha.serializers import RestCaptchaSerializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
-from .permissions import IsSelfOrReadOnly, IsAdmin, Any, IfObjAdminReadOnly
-from .serializers import UserSerializer, ChangeUserPasswordSerializer
+from .permissions import IsSelf, Any
+from .serializers import (
+    UserSerializer,
+    ChangeUserPasswordSerializer,
+    RegistrationSerializer,
+)
 
 
 User = get_user_model()
 
 
 class RegistrationView(APIView):
+    serializer_class = RegistrationSerializer
     permission_classes = [Any]
 
+    @extend_schema(
+        tags=["registration"],
+        summary="register new user",
+        description="register new user with username and password. \
+            user should solve captcha to be registered.",
+        responses={
+            200: OpenApiResponse(description="registration success"),
+            400: OpenApiResponse(
+                description="wrong request data",
+            ),  # TODO: make response body for 400 error
+        },
+    )
     def post(self, request: Request, format=None):
-        """create user"""
-
-        captcha_serializer = RestCaptchaSerializer(data=request.data)
-        captcha_serializer.is_valid(raise_exception=True)
-
-        serializer = UserSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         serializer.save()
-        return Response(serializer.data)
+        return Response()
 
-class SelfDetails(APIView):
+
+class SelfViewSet(ModelViewSet):
+    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request: Request, format=None):
-        """get info about self"""
+    def get_object(self):
+        return self.request.user
 
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+    def get_queryset(self):
+        raise NotImplementedError("can't get multiple objects")
 
+    @extend_schema(
+        tags=["self"],
+        summary="get self data",
+        description="get data of authenticated user",
+        responses={
+            200: UserSerializer,
+            401: OpenApiResponse(  # TODO: make detailed error response
+                description="not authenticated",
+            ),
+        },
+    )
+    def retrieve(self, *args, **kwargs):
+        return super().retrieve(*args, **kwargs)
 
+    @extend_schema(
+        tags=["self"],
+        summary="delete self",
+        description="delete account of authenticated user",
+        responses={
+            200: OpenApiResponse(
+                description="success"
+            ),  # TODO: ckeck, may be 201 or 202 or something like that
+            401: OpenApiResponse(
+                description="not authenticated"
+            ),  # TODO: add response body {detail: error detail}
+        },
+    )
+    def destroy(self, *args, **kwargs):
+        return super().destroy(*args, **kwargs)
 
-class UserDetails(APIView):
-    permission_classes = [IsAdmin | IsSelfOrReadOnly, IfObjAdminReadOnly]
-
-    def get_object(self, request, pk: int, format=None) -> User:
-        try:
-            user = User.objects.get(pk=pk)
-        except User.DoesNotExist as e:
-            raise NotFound(f"user not found {pk=}")
-
-        for permission in self.get_permissions():
-            if not permission.has_object_permission(request, self, user):
-                self.permission_denied(
-                    request,
-                    message=getattr(permission, "message", None),
-                )
-        return user
-
-    def get(self, request: Request, pk: int, format=None):
-        """get info about user"""
-
-        serializer = UserSerializer(self.get_object(request, pk))
-        return Response(serializer.data)
-
-    def patch(self, request: Request, pk: int, format=None):
-        """update user data, return updated data"""
-
-        serializer = UserSerializer(
-            self.get_object(request, pk), request.data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-
-        serializer.save()
-        return Response(serializer.data)
-
-    def delete(self, request: Request, pk: int, format=None):
-        """delete user"""
-
-        self.get_object(request, pk).delete()
-        return Response({"success": 1})
+    @extend_schema(
+        tags=["self"],
+        summary="update self",
+        description="update data of authenticated user",
+        responses=UserSerializer,
+        # responses={
+        #     200: OpenApiResponse(
+        #         description="success"
+        #     ),  # TODO: ckeck, may be 201 or 202 or something like that
+        #     400: OpenApiResponse(
+        #         description="invalid data"
+        #     ),  # TODO: add response body {detail: error detail}
+        #     401: OpenApiResponse(
+        #         description="not authenticated"
+        #     ),  # TODO: add response body {detail: error detail}
+        # },
+    )
+    def update(self, *args, **kwargs):
+        return super().update(*args, **kwargs)
 
 
 class Auth(ObtainAuthToken):
+    @extend_schema(
+        tags=["auth"],
+        summary="authenticate",
+        description="get authentication token",
+    )
+    def post(self, *args, **kwargs):
+        return super().post(*args, **kwargs)
+
+    @extend_schema(
+        tags=["auth"],
+        summary="delete auth token",
+        description="make token unuseable",
+        responses={
+            200: OpenApiResponse(description="success"),
+            403: OpenApiResponse(  # TODO: make normal docs for error responses
+                description="should be authenticated",
+            ),
+            404: OpenApiResponse(description="no tokens found"),
+        },
+    )
     def delete(self, request: Request, format=None):
         """delete auth token"""
 
@@ -92,20 +135,30 @@ class Auth(ObtainAuthToken):
         try:
             token = Token.objects.get(user=user.pk)
             token.delete()
-        except Token.DoesNotExist as e:
+        except Token.DoesNotExist:
             raise NotFound(f"user have no token {user.username=}")
 
-        return Response({"success": 1})
+        return Response()
 
 
 class ChangePasswordView(APIView):
+    serializer_class = ChangeUserPasswordSerializer
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        tags=["self"],
+        summary="change user password",
+        responses={
+            200: OpenApiResponse(description="success"),
+            400: OpenApiResponse(description="invalid old password"),
+            401: OpenApiResponse(description="not authenticated"),
+        },
+    )
     def patch(self, request: Request, format=None):
         """change user password"""
 
-        serializer = ChangeUserPasswordSerializer(request.user, request.data)
+        serializer = self.serializer_class(request.user, request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         request.auth.delete()
-        return Response({"success": 1})
+        return Response()

@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer, Serializer, CharField
 from rest_framework.exceptions import ValidationError
+from rest_captcha.serializers import RestCaptchaSerializer
 
 from .models import CustomUser as User
 
@@ -7,14 +8,24 @@ from .models import CustomUser as User
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "info", "is_stuff", "registration_date", "password"]
-        read_only_fields = ["id", "is_stuff", "registration_date"]
-        extra_kwargs = {"password": {"write_only": True}}
+        fields = ["id", "username", "registration_date"]
+        read_only_fields = ["id", "registration_date"]
 
-    def validate(self, data):
-        if self.instance and "password" in data:
-            raise ValidationError("password can't be changed here")
-        return data
+    def create(self, validated_data):
+        raise NotImplementedError()("use RegistrationSerializer for user creation")
+
+
+class RegistrationSerializer(ModelSerializer, RestCaptchaSerializer):
+    class Meta:
+        model = User
+        fields = ["captcha_key", "captcha_value", "username", "password"]
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "username": {"write_only": True},
+        }
+
+    def update(self, instance: User, validated_data):
+        raise NotImplementedError("only for user creation")
 
     def create(self, validated_data):
         instance = super().create(validated_data)
@@ -39,7 +50,7 @@ class ChangeUserPasswordSerializer(Serializer):
         return data
 
     def create(*args, **kwargs):
-        raise NotImplemented("only for changing password")
+        raise NotImplementedError("serializer can be used for changing password only")
 
     def update(self, instance: User, validated_data):
         new = validated_data["new_password"]

@@ -16,15 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 import rest_captcha.urls as captcha_urls
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+    SpectacularJSONAPIView,
+)
 
-from .error_views import *
-import users.urls as users_urls
-import notes.urls as notes_urls
+import captcha.urls
+import users.urls
+import notes.urls
+
+
+v1 = [
+    path("captcha/", include(captcha.urls)),
+    path("users/", include(users.urls)),
+    path("notes/", include(notes.urls)),
+]
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("captcha/", include(captcha_urls)),
-    path("users/", include(users_urls)),
-    path("notes/", include(notes_urls)),
+    path("admin/", admin.site.urls),  # TODO: read how make admin with rest framework
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="schema")),
+    path("v1/", include(v1)),
 ]

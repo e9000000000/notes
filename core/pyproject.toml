@@ -5,18 +5,20 @@ description = "core api"
 authors = ["e9000000000 <a@a.a>"]
 
 [tool.poetry.dependencies]
-python = ">=3.10"
-Django = "*"
-djangorestframework = "*"
-psycopg2 = "*"
+python = "^3.10"
+django = "^4.0.4"
+djangorestframework = "^3.13.1"
+psycopg2 = "^2.9.3"
 django-rest-captcha = { git = "https://github.com/e9000000000/django-rest-captcha.git", branch = "master" }
-gunicorn = "*"
+gunicorn = "^20.1.0"
+drf-spectacular = {extras = ["sidecar"], version = "^0.22.0"}
 
 [tool.poetry.dev-dependencies]
-django-stubs = "*"
-djangorestframework-stubs = "*"
-debugpy = "*"
-black = "*"
+django-stubs = "^1.10.1"
+djangorestframework-stubs = "^1.5.0"
+black = "^22.3.0"
+mypy = "^0.942"
+pylama = "^8.3.8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

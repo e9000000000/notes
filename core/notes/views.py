@@ -4,7 +4,6 @@ from rest_framework.request import Request
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 
-from users.permissions import IsAdmin
 from .serializers import NotesSerializer
 from .models import Note
 from .permissions import IsAuthorOrReadOnlyIfNotPrivate
@@ -30,7 +29,7 @@ class NotesView(APIView):
 
 
 class NoteDetailsView(APIView):
-    permission_classes = [IsAdmin | IsAuthorOrReadOnlyIfNotPrivate]
+    permission_classes = [IsAuthorOrReadOnlyIfNotPrivate]
 
     def get_object(self, request, pk: str, format=None) -> Note:
         try:
