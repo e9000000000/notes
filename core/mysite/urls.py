@@ -15,12 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import rest_captcha.urls as captcha_urls
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularSwaggerView,
-    SpectacularJSONAPIView,
-)
+from django.conf import settings
 
 import captcha.urls
 import users.urls
@@ -36,7 +31,9 @@ v1 = [
 
 urlpatterns = [
     path("admin/", admin.site.urls),  # TODO: read how make admin with rest framework
-    path("schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("docs/", SpectacularSwaggerView.as_view(url_name="schema")),
     path("v1/", include(v1)),
 ]
+if settings.DEBUG:
+    from drf_spectacular.views import SpectacularAPIView
+
+    urlpatterns.append(path("schema/", SpectacularAPIView.as_view(), name="schema"))

@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "rest_captcha",
     "drf_spectacular",
-    "drf_spectacular_sidecar",
     # my
     "captcha",
     "users",
@@ -127,8 +126,7 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.JSONRenderer",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "users.authentication.CookieTokenAuthentication",
-        # "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -140,8 +138,4 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "",
     "VERSION": "1",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SWAGGER_UI_DIST": "SIDECAR",
-    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
-    "REDOC_DIST": "SIDECAR",
-    "ENABLE_LIST_MECHANICS_ON_NON_2XX": True,
 }

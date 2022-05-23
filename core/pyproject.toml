@@ -11,7 +11,7 @@ djangorestframework = "^3.13.1"
 psycopg2 = "^2.9.3"
 django-rest-captcha = { git = "https://github.com/e9000000000/django-rest-captcha.git", branch = "master" }
 gunicorn = "^20.1.0"
-drf-spectacular = {extras = ["sidecar"], version = "^0.22.0"}
+drf-spectacular = "^0.22.0"
 
 [tool.poetry.dev-dependencies]
 django-stubs = "^1.10.1"

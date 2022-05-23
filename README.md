@@ -24,3 +24,17 @@ set env variables:
 - `NOTES_DB_NAME` - database name
 
 `docker-compose up --build`
+
+## development
+runing dev server of core microservice
+```bash
+pip install poetry
+poetry update
+poetry run python manage.py runserver --settings mysite.dev_settings
+```
+-------
+access core api documentation with swagger ui (dev server should be ran)
+```bash
+docker run --net=host swaggerapi/swagger-ui
+```
+then explore this url `http://localhost:8000/schema`
