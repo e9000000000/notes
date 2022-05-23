@@ -30,6 +30,8 @@ runing dev server of core microservice
 ```bash
 pip install poetry
 poetry update
+poetry run python manage.py makemigrations
+poetry run python manage.py migrate --settings mysite.dev_settings
 poetry run python manage.py runserver --settings mysite.dev_settings
 ```
 -------

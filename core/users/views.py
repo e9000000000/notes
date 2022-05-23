@@ -23,9 +23,6 @@ class RegistrationView(APIView):
     serializer_class = RegistrationSerializer
     authentication_classes = []
 
-    def get_serializer(self, *args, **kwargs):
-        return self.serializer_class(*args, **kwargs)
-
     @extend_schema(
         tags=["user"],
         summary="register new user",
@@ -56,9 +53,6 @@ class SelfViewSet(ModelViewSet):
     def get_queryset(self):
         raise NotImplementedError("can't get multiple objects")
 
-    def get_serializer(self, *args, **kwargs):
-        return self.serializer_class(*args, **kwargs)
-
     @extend_schema(
         tags=["user"],
         summary="get self data",
@@ -78,9 +72,7 @@ class SelfViewSet(ModelViewSet):
         summary="delete self",
         description="delete account of authenticated user",
         responses={
-            204: OpenApiResponse(
-                description="success"
-            ),  # TODO: ckeck, may be 201 or 202 or something like that
+            204: OpenApiResponse(description="success"),
             401: OpenApiResponse(
                 description="not authenticated"
             ),  # TODO: add response body {detail: error detail}
@@ -93,11 +85,8 @@ class SelfViewSet(ModelViewSet):
         tags=["user"],
         summary="update self",
         description="update data of authenticated user",
-        # responses=UserSerializer,
         responses={
-            200: OpenApiResponse(
-                description="success"
-            ),  # TODO: ckeck, may be 201 or 202 or something like that
+            200: UserSerializer,
             400: OpenApiResponse(
                 description="invalid data"
             ),  # TODO: add response body {detail: error detail}
