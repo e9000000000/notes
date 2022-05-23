@@ -11,7 +11,7 @@ cache = caches[api_settings.CAPTCHA_CACHE]
 
 def get_auth_headers(self, username: str, password: str):
     token = self.client.post(
-        f"/users/auth/", {"username": username, "password": password}, format="json"
+        "/users/auth/", {"username": username, "password": password}, format="json"
     ).json()["token"]
     return {"HTTP_AUTHORIZATION": f"Token {token}"}
 
@@ -29,13 +29,9 @@ class UsersTests(APITestCase):
 
         response = self.client.get(f"/users/self/", **headers, format="json")
         data: dict = response.json()
-        self.assertEqual(
-            set(data), {"id", "username", "info", "is_stuff", "registration_date"}
-        )
+        self.assertEqual(set(data), {"id", "username", "registration_date"})
         self.assertEqual(data["id"], user.pk)
         self.assertEqual(data["username"], "user")
-        self.assertEqual(data["info"], "")
-        self.assertEqual(data["is_stuff"], False)
 
     def test_create_user_wrong_captcha(self):
         response = self.client.post(
@@ -69,8 +65,7 @@ class UsersTests(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         user = User.objects.get(username="u")
-        self.assertEqual(user.is_stuff, False)
-        self.assertEqual(user.info, "")
+        self.assertEqual(user.username, "u")
 
 
 class UserAuthTests(APITestCase):
@@ -138,15 +133,7 @@ class ChangeUserPasswordTests(APITestCase):
 
 class UserDetailsTests(APITestCase):
     def setUp(self):
-        self.admin = User(username="admin", is_stuff=True)
-        self.admin.set_password("1150")
-        self.admin.save()
-
-        self.another_admin = User(username="another_admin", is_stuff=True)
-        self.another_admin.set_password("911")
-        self.another_admin.save()
-
-        self.u = User(username="u", info="some info")
+        self.u = User(username="u")
         self.u.set_password("1215")
         self.u.save()
 
@@ -158,85 +145,33 @@ class UserDetailsTests(APITestCase):
             self, *args, **kwargs
         )
 
-    def test_get_user_info(self):
-        response = self.client.get(f"/users/{self.u.pk}/", format="json")
-        data: dict = response.json()
-        self.assertEqual(
-            set(data), {"id", "username", "info", "is_stuff", "registration_date"}
-        )
-        self.assertEqual(data["id"], self.u.pk)
-        self.assertEqual(data["username"], "u")
-        self.assertEqual(data["info"], "some info")
-        self.assertEqual(data["is_stuff"], False)
-
     def test_edit_and_delete_user_no_auth(self):
-        response = self.client.patch(
-            f"/users/{self.u.pk}/", {"username": "uu"}, format="json"
-        )
+        response = self.client.patch("/users/self/", {"username": "uu"}, format="json")
         self.assertEqual(response.status_code, 401, f"{response.json()=}")
-        response = self.client.delete(f"/users/{self.u.pk}/", format="json")
+        response = self.client.delete("/users/self/", format="json")
         self.assertEqual(response.status_code, 401, f"{response.json()=}")
-
-    def test_edit_and_delete_as_another_user(self):
-        headers = self.get_auth_headers("another_u", "314")
-        response = self.client.patch(
-            f"/users/{self.u.pk}/", {"username": "uu"}, format="json", **headers
-        )
-        self.assertEqual(response.status_code, 403, f"{response.json()=}")
-        response = self.client.delete(f"/users/{self.u.pk}/", format="json", **headers)
-        self.assertEqual(response.status_code, 403, f"{response.json()=}")
-
-    def test_edit_and_delete_admin_as_another_admin(self):
-        headers = self.get_auth_headers("another_admin", "911")
-        response = self.client.patch(
-            f"/users/{self.admin.pk}/", {"username": "uu"}, format="json", **headers
-        )
-        self.assertEqual(response.status_code, 403, f"{response.json()=}")
-        response = self.client.delete(
-            f"/users/{self.admin.pk}/", format="json", **headers
-        )
-        self.assertEqual(response.status_code, 403, f"{response.json()=}")
 
     def test_edit_and_delete_self(self):
         headers = self.get_auth_headers("u", "1215")
-        self.edit_and_delete_user_as_someone_who_have_permission(headers)
 
-    def test_edit_and_delete_as_admin(self):
-        headers = self.get_auth_headers("admin", "1150")
-        self.edit_and_delete_user_as_someone_who_have_permission(headers)
-
-    def edit_and_delete_user_as_someone_who_have_permission(self, headers):
         # edit
         response = self.client.patch(
-            f"/users/{self.u.pk}/", {"username": "uu"}, format="json", **headers
+            "/users/self/", {"username": "uu"}, format="json", **headers
         )
-        self.assertEqual(response.status_code, 200, f"response.json()")
+        self.assertEqual(response.status_code, 200, "response.json()")
         self.u.refresh_from_db()
         self.assertEqual(self.u.username, "uu")
 
         response = self.client.patch(
-            f"/users/{self.u.pk}/", {"info": "test info"}, format="json", **headers
-        )
-        self.assertEqual(response.status_code, 200, f"response.json()")
-        self.u.refresh_from_db()
-        self.assertEqual(self.u.info, "test info")
-
-        response = self.client.patch(
-            f"/users/{self.u.pk}/",
+            "/users/self/",
             {"username": "ua", "password": "aa"},
             format="json",
             **headers,
         )
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.patch(
-            f"/users/{self.u.pk}/", {"is_stuff": True}, format="json", **headers
-        )
-        self.u.refresh_from_db()
-        self.assertEqual(self.u.is_stuff, False)
-
         # delete
-        response = self.client.delete(f"/users/{self.u.pk}/", format="json", **headers)
+        response = self.client.delete("/users/self/", format="json", **headers)
         self.assertEqual(response.json(), {"success": 1})
         try:
             User.objects.get(pk=self.u.pk)

@@ -20,9 +20,6 @@ class NotesNoAuthTests(APITestCase):
 
 class NotesTests(APITestCase):
     def setUp(self):
-        self.admin_u = User(username="admin_u", is_stuff=True)
-        self.admin_u.set_password("1215")
-        self.admin_u.save()
         self.u = User(username="u")
         self.u.set_password("1215")
         self.u.save()
@@ -137,7 +134,7 @@ class NotesTests(APITestCase):
 
         response = self.client.patch(
             f"/notes/{self.u_note.pk}/",
-            {"text": "patched", "visibility": "BU"},
+            {"text": "patched", "visibility": Note.BY_URL},
             **self.headers,
             format="json",
         )
@@ -145,33 +142,12 @@ class NotesTests(APITestCase):
 
         self.u_note.refresh_from_db()
         self.assertEqual(self.u_note.text, "patched")
-        self.assertEqual(self.u_note.visibility, "BU", response.json())
+        self.assertEqual(self.u_note.visibility, Note.BY_URL, response.json())
 
         response = self.client.delete(
             f"/notes/{self.u_note.pk}/", **self.headers, format="json"
         )
-        self.assertEqual(response.status_code, 200)
-
-        try:
-            Note.objects.get(pk=self.u_note.pk)
-            self.assertIsNotNone(None, "should be deleted")
-        except Note.DoesNotExist:
-            pass
-
-    def test_update_delete_private_note_as_admin(self):
-        headers = get_auth_headers(self, "admin_u", "1215")
-        response = self.client.patch(
-            f"/notes/{self.u_note.pk}/", {"text": "patched"}, **headers, format="json"
-        )
-        self.assertEqual(response.status_code, 200)
-
-        self.u_note.refresh_from_db()
-        self.assertEqual(self.u_note.text, "patched")
-
-        response = self.client.delete(
-            f"/notes/{self.u_note.pk}/", **headers, format="json"
-        )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         try:
             Note.objects.get(pk=self.u_note.pk)

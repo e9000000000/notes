@@ -26,6 +26,13 @@ set env variables:
 `docker-compose up --build`
 
 ## development
+run core tests
+```bash
+pip install poetry
+poetry update
+poetry run python manage.py tests --settings mysite.dev_settings
+```
+-------
 runing dev server of core microservice
 ```bash
 pip install poetry
