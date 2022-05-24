@@ -9,7 +9,17 @@ const Errors = ({data, onClose}) => {
       {Object.keys(data).map((key, i) => (
         <div className='errordetails'>
           <h2>{key}</h2>
-          <p>{data[key]}</p>
+          {Array.isArray(data[key]) ? (
+            <>
+              {
+                data[key].map((subData, j) => (
+                  <p>{subData}</p>
+                ))
+              }
+            </>
+          ) : (
+            <p>{data[key]}</p>
+          )}
         </div>
       ))}
       <Button text='close' onClick={onClose}/>

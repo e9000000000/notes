@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  color: #eeeeee;
 }
 
 body {
@@ -8,9 +9,7 @@ body {
 }
 
 .header {
-  background-color: #181818;
-  /* padding: 0.5em; */
-  color: #aeaeae;
+  background-color: #202020;
   display: flex;
   justify-content: space-between;
 }
@@ -20,7 +19,6 @@ body {
 }
 
 .header > .headerDiv > * {
-  /* padding: 0.3em; */
   display: flex;
   margin-top: auto;
   margin-bottom: auto;
@@ -31,7 +29,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #181818;
+  background-color: #202020;
 }
 
 .popup > .row {
@@ -41,6 +39,13 @@ body {
 
 h1 {
   font-size: 25pt;
+  padding: 1rem;
+  color: #aeaeae;
+}
+
+h2 {
+  font-size: 20pt;
+  font-weight: normal;
   padding: 1rem;
 }
 
@@ -53,6 +58,7 @@ h1 {
 }
 
 .btn {
+  color: #aeaeae;
   font-size: 19pt;
   user-select: none;
   background-color: #121212;
@@ -61,14 +67,13 @@ h1 {
 }
 
 .btn:Hover {
-  color: #aeae50;
+  background-color: #060606;
   cursor: pointer;
 }
 
 .input {
   display: flex;
   background-color: #0a0a0a;
-  color: #aeaeae;
   font-size: 17pt;
   border: none;
   outline: none;
@@ -80,7 +85,7 @@ h1 {
 }
 
 .input:hover {
-  background-color: #121212
+  background-color: #060606;
 }
 
 .shadowall {
@@ -90,4 +95,17 @@ h1 {
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+
+
+.note {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  margin-top: 1rem;
+  background-color: #202020;
+}
+
+.note > p {
+  font-size: 17pt;
+  padding: 1rem;
 }

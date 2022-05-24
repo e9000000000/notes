@@ -1,7 +1,20 @@
-const Input = ({placeholder, value, onChange}) => {
+const Input = ({type, placeholder, value, onChange}) => {
   return (
-    <input className='input' type='text' placeholder={placeholder} value={value} onChange={onChange}/>
+    <>
+      {type === 'text' ? (
+        <input className='input' type={type} placeholder={placeholder} value={value} onChange={onChange} />
+      ) : type === 'textarea' ? (
+        <textarea className='input' placeholder={placeholder} value={value} onChange={onChange}/>
+      ) : 
+      (
+        <h2>wrong type</h2>
+      )}
+    </>
   )
+}
+
+Input.defaultProps = {    
+  type: "text",    
 }
 
 export default Input

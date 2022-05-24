@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react'
-import useCookie from 'react-use-cookie'
 
 import { baseUrl } from '../config.js'
 import Button from './Button.js'
 import Registration from './Registration.js'
 import Login from './Login.js'
 
-const Header = ({title}) => {
-  const [token, setToken] = useCookie('token')
-
+const Header = ({token, setToken}) => {
   const [user, setUser] = useState(null)
   const [showRegistration, setShowRegistration] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
@@ -46,7 +43,7 @@ const Header = ({title}) => {
   return (
     <header className='header'>
       <div className='headerDiv'>
-        <h1>{title}</h1>
+        <h1>Notes</h1>
       </div>
       <div className='headerDiv'>
         {user == null ? (
@@ -56,7 +53,7 @@ const Header = ({title}) => {
           </>
         ) : (
           <>
-            <Button text={user.username} />
+            <h2>{user.username}</h2>
             <Button text='logout' onClick={logout} />
           </>
         )}
