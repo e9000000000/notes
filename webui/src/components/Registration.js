@@ -28,8 +28,10 @@ const Registration = ({ onClose, setToken }) => {
     }
     fetch(baseUrl + '/api/users/register/', requestOpts)
       .then((resp) => {
-        if (!resp.ok)
+        if (!resp.ok) {
+          setChangeCaptcha(changeCaptcha + 1)
           resp.json().then(data => setErrors(data))
+        }
         else {
           requestOpts.body = JSON.stringify({
             'username': username,
@@ -61,9 +63,9 @@ const Registration = ({ onClose, setToken }) => {
       method: 'POST'
     }
     fetch(baseUrl + '/api/captcha/', requestOpts)
-      .then((resp) => resp.json())
-      .then((data) => {
-        setCaptcha(data)
+      .then((resp) => {
+        if (resp.ok)
+          resp.json().then(data => setCaptcha(data))
       })
   }, [changeCaptcha])
 
