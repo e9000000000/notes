@@ -33,6 +33,8 @@ services:
       - POSTGRES_PASSWORD
       - NOTES_SECRET_KEY
       - NOTES_DB_NAME
+    ports:
+      - 8000:80
 
   build_webui:
     container_name: build_webui
@@ -41,7 +43,6 @@ services:
     volumes:
       - ./webui:/service
 
-
   postgres:
     container_name: postgres
     restart: on-failure
@@ -49,6 +50,6 @@ services:
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
-      - POSTGRES_DB=NOTES_DB_NAME
+      - POSTGRES_DB=${NOTES_DB_NAME}
     volumes:
       - ~/pgdata:/var/lib/postgresql/data
