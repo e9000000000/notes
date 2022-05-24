@@ -1,6 +1,12 @@
 # notes
 - codestyle - black
 
+![](https://raw.githubusercontent.com/e9000000000/notes/main/imgs/main.png)
+
+![](https://raw.githubusercontent.com/e9000000000/notes/main/imgs/reg.png)
+
+![](https://raw.githubusercontent.com/e9000000000/notes/main/imgs/edit.png)
+
 simple notes.  
 users can write something and share with another users if they want.
 or make note private, so no one can see it.
@@ -8,12 +14,12 @@ or make note private, so no one can see it.
 ## technology stack
 - webserver - nginx
 - database - postgresql
-- backend (finished)
+- backend
     - python3.10
     - django
     - django rest framework
     - gunicorn
-- frontend (in progress)
+- frontend
     - react
 
 ## run
