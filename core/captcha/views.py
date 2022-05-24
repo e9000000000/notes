@@ -9,6 +9,7 @@ class RestCaptchaView(OldRestCaptchaView):
         summary="get captcha image",
         description="solve captcha, then send solution and captcha key to any other endpoint,\
             where captcha is required",
+        request=None,
         responses=ImageSerializer,
     )
     def post(self, request):
