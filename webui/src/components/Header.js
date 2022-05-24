@@ -1,38 +1,17 @@
 import { useState, useEffect } from 'react'
-import { baseUrl } from '../config.js'
 import useCookie from 'react-use-cookie'
+
+import { baseUrl } from '../config.js'
 import Button from './Button.js'
+import Registration from './Registration.js'
+import Login from './Login.js'
 
 const Header = ({title}) => {
-  const [user, setUser] = useState(null)
-
   const [token, setToken] = useCookie('token')
 
-  const register = () => {
-    // TODO: create registration popup
-  }
-
-  const login = () => {
-    var username = prompt("username")
-    var password = prompt("password")
-    const requestOpts = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        'username': username,
-        'password': password
-      })
-    }
-    fetch(baseUrl + "/api/users/auth/", requestOpts)
-      .then(resp => {
-        if (resp.status === 200) {
-          return resp.json()
-        } else {
-          alert('wrong username or password')
-        }
-      })
-      .then(data => setToken(data.token))
-  }
+  const [user, setUser] = useState(null)
+  const [showRegistration, setShowRegistration] = useState(false)
+  const [showLogin, setShowLogin] = useState(false)
 
   const logout = () => {
     const requestOpts = {
@@ -72,8 +51,8 @@ const Header = ({title}) => {
       <div className='headerDiv'>
         {user == null ? (
           <>
-            <Button text='register' onClick={register} />
-            <Button text='login' onClick={login} />
+            <Button text='register' onClick={() => setShowRegistration(true)} />
+            <Button text='login' onClick={() => setShowLogin(true)} />
           </>
         ) : (
           <>
@@ -82,6 +61,16 @@ const Header = ({title}) => {
           </>
         )}
       </div>
+      {showLogin ? (
+        <Login setToken={setToken} onClose={() => setShowLogin(false)}/>
+      ) : (
+        null
+      )}
+      {showRegistration ? (
+        <Registration onClose={() => setShowRegistration(false)}/>
+      ) : (
+        null
+      )}
     </header>
   )
 }
