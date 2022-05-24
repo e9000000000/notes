@@ -35,7 +35,7 @@ const NoteDetails = ({ token, user }) => {
       headers: { 'Authorization': 'Token ' + token}
     }
 
-    if (!token || token === '0') {
+    if (!user) {
       requestOpts.headers = {}
     }
 

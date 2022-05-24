@@ -5,7 +5,7 @@ import Button from './Button.js'
 import Input from './Input.js'
 import Errors from './Errors.js'
 
-const Registration = ({onClose}) => {
+const Registration = ({ onClose, setToken }) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -28,18 +28,26 @@ const Registration = ({onClose}) => {
     }
     fetch(baseUrl + '/api/users/register/', requestOpts)
       .then((resp) => {
-        if (resp.status !== 204)
-          return resp.json()
-        else
-          onClose()
-        return {success: 1}
+        if (!resp.ok)
+          resp.json().then(data => setErrors(data))
+        else {
+          requestOpts.body = JSON.stringify({
+            'username': username,
+            'password': password
+          })
+          fetch(baseUrl + '/api/users/auth/', requestOpts)
+            .then(resp => {
+              if (resp.ok)
+                resp.json().then(data => {
+                  setToken(data.token)
+                  onClose()
+                })
+              else
+                resp.json().then(data => setErrors(data))
+            })
+        }
       })
-      .then((data) => {
-        if (data.success === 1)
-          return
 
-        setErrors(data)
-      })
   }
 
   useEffect(() => {

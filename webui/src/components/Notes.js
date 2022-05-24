@@ -5,7 +5,7 @@ import Button from './Button.js'
 import Note from './Note.js'
 import AddNote from './AddNote.js'
 
-const Notes = ({token}) => {
+const Notes = ({ token, user }) => {
   const [notes, setNotes] = useState(null)
   const [addShow, setAddShow] = useState(false)
 
@@ -24,13 +24,22 @@ const Notes = ({token}) => {
       headers: { 'Authorization': 'Token ' + token}
     }
     fetch(baseUrl + '/api/notes/', requestOpts)
-      .then(resp => resp.json())
-      .then(data => setNotes(data))
+      .then(resp => {
+        if (resp.ok)
+          resp.json().then(data => setNotes(data))
+        else
+          setNotes(null)
+      })
+      
   }, [token, addShow])
 
   return (
     <div className='notes-container'>
-      <Button text='new note' onClick={() => setAddShow(true)} />
+      { user ? (
+        <Button text='new note' onClick={() => setAddShow(true)} />
+      ) : (
+        null
+      )}
       <div className='notes'>
         {notes ? notes.map((note, i) => (
           <Note key={note.id} data={note} />

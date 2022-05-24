@@ -20,7 +20,7 @@ function App() {
       <div className="App">
         <Header token={token} setToken={setToken} user={user} setUser={setUser} />
         <Routes>
-          <Route path='/' element={<Notes token={token} />} />
+          <Route path='/' element={<Notes token={token} user={user} />} />
           <Route path='/:id' element={<NoteDetails token={token} user={user} />} />
         </Routes>
       </div>

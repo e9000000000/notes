@@ -16,11 +16,10 @@ const Header = ({token, setToken, user, setUser}) => {
     }
     fetch(baseUrl + "/api/users/unauth/", requestOpts)
       .then(resp => {
-        if (resp.status === 204) {
+        if (resp.ok)
           setToken('0')
-        } else {
+        else
           alert('cant delete token for unknown reason')
-        }
       })
   }
 
@@ -35,8 +34,13 @@ const Header = ({token, setToken, user, setUser}) => {
       headers: { 'Authorization': 'Token ' + token}
     }
     fetch(baseUrl + '/api/users/self/', requestOpts)
-      .then(resp => resp.json())
-      .then(data => setUser(data))
+      .then(resp => {
+        if (resp.ok)
+          resp.json().then(data => setUser(data))
+        else
+          setUser(null)
+      })
+      
   }, [token])
 
   return (
@@ -45,7 +49,7 @@ const Header = ({token, setToken, user, setUser}) => {
         <h1>Notes</h1>
       </div>
       <div className='headerDiv'>
-        {user == null ? (
+        {user === null ? (
           <>
             <Button text='register' onClick={() => setShowRegistration(true)} />
             <Button text='login' onClick={() => setShowLogin(true)} />
@@ -63,7 +67,7 @@ const Header = ({token, setToken, user, setUser}) => {
         null
       )}
       {showRegistration ? (
-        <Registration onClose={() => setShowRegistration(false)}/>
+        <Registration setToken={setToken} onClose={() => setShowRegistration(false)}/>
       ) : (
         null
       )}

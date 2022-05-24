@@ -21,14 +21,14 @@ const Login = ({onClose, setToken}) => {
       })
     }
     fetch(baseUrl + "/api/users/auth/", requestOpts)
-      .then(resp => resp.json())
-      .then(data => {
-        if (data.token) {
-          setToken(data.token)
-          onClose()
-        }
+      .then(resp => {
+        if (resp.ok)
+          resp.json().then(data => {
+            setToken(data.token)
+            onClose()
+          })
         else
-          setErrors(data)
+          resp.json().then(data => setErrors(data))
       })
   }
 
