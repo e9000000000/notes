@@ -18,23 +18,28 @@ or make note private, so no one can see it.
 
 ## run
 set env variables:
-- `POSTGRES_USER` - database user name, set to `postgres`
-- `POSTGRES_PASSWORD` - database user password
-- `NOTES_SECRET_KEY` - django secret key
+- `NOTES_PGDATA_PATH` - path to a directory where postgres will store the data
 - `NOTES_DB_NAME` - database name
+- `POSTGRES_PASSWORD` - database password
+- `NOTES_SECRET_KEY` - django secret key
 
-run
+if postgres data directory is empty or not exists: just run
 ```bash
 docker-compose up --build
 ```
 
-if database is not created: run this
+---
+if data is already initialized docker will not create database, so you have to do it manualy
 ```bash
 docker-compose up --build --no-start
 docker-compose run -d --name postgres postgres
 docker exec -it postgres /bin/bash
-psql --user=postgres -c "CREATE DATABASE $POSTGRES_DB"
-docker-compose restart
+psql --user=postgres  # use any user which have rights to create database and another user
+```
+```sql
+CREATE DATABASE yourDatabaseName;
+CREATE USER sameUsernameAsDatabase;
+GRANT ALL PRIVILEGES ON DATABASE yourDatabaseName TO sameUsernameAsDatabase;
 ```
 
 ## development
