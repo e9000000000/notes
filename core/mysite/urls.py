@@ -22,14 +22,19 @@ import users.urls
 import notes.urls
 
 
-urlpatterns = [
-    path("admin/", admin.site.urls),  # TODO: read how make admin with rest framework
+urlpatterns = []
+
+api = [
     path("captcha/", include(captcha.urls)),
     path("users/", include(users.urls)),
     path("notes/", include(notes.urls)),
 ]
 
+
 if settings.DEBUG:
     from drf_spectacular.views import SpectacularAPIView
 
+    urlpatterns.append(path("api/", include(api)))
     urlpatterns.append(path("schema/", SpectacularAPIView.as_view(), name="schema"))
+else:
+    urlpatterns.append(path("", include(api)))
