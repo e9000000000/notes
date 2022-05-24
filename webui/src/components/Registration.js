@@ -9,6 +9,7 @@ const Registration = ({ onClose, setToken }) => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [password2, setPassword2] = useState('')
   const [captcha, setCaptcha] = useState(null)
   const [changeCaptcha, setChangeCaptcha] = useState(0)
   const [captchaValue, setCaptchaValue] = useState(null)
@@ -16,6 +17,11 @@ const Registration = ({ onClose, setToken }) => {
   const [showErrors, setShowErrors] = useState(false)
 
   const register = () => {
+    if (password !== password2) {
+      setErrors({passwords: 'passwords are deferent'})
+      return
+    }
+
     var requestOpts = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
@@ -76,6 +82,7 @@ const Registration = ({ onClose, setToken }) => {
       <h1>Registration</h1>
       <Input placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)} />
       <Input placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input placeholder='repeat password' value={password2} onChange={(e) => setPassword2(e.target.value)} />
       {captcha === null ? (
         <p>captcha loading...</p>
       ) : (
