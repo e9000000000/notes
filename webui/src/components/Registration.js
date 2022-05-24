@@ -81,8 +81,8 @@ const Registration = ({ onClose, setToken }) => {
     <div className='popup'>
       <h1>Registration</h1>
       <Input placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)} />
-      <Input placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Input placeholder='repeat password' value={password2} onChange={(e) => setPassword2(e.target.value)} />
+      <Input type='password' placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input type='password' placeholder='repeat password' value={password2} onChange={(e) => setPassword2(e.target.value)} />
       {captcha === null ? (
         <p>captcha loading...</p>
       ) : (

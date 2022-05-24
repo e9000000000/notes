@@ -44,7 +44,7 @@ const Login = ({onClose, setToken}) => {
     <div className='popup'>
       <h1>Login</h1>
       <Input placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)} />
-      <Input placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input type='password' placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)} />
       <div className='row'>
         <Button text='close' onClick={onClose}/>
         <Button text='login' onClick={login}/>
