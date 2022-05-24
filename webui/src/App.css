@@ -101,11 +101,25 @@ h2 {
 .note {
   display: grid;
   grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
   margin-top: 1rem;
   background-color: #202020;
 }
 
 .note > p {
+  font-size: 17pt;
+  padding: 1rem;
+}
+
+.note-detail {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
+  margin-top: 1rem;
+  background-color: #202020;
+}
+
+.note-detail p {
   font-size: 17pt;
   padding: 1rem;
 }

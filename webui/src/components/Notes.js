@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react'
 
 import { baseUrl } from '../config.js'
 import Button from './Button.js'
-import Input from './Input.js'
-import Errors from './Errors.js'
 import Note from './Note.js'
 import AddNote from './AddNote.js'
 
-const Notes = ({token, setToken}) => {
+const Notes = ({token}) => {
   const [notes, setNotes] = useState(null)
   const [addShow, setAddShow] = useState(false)
 

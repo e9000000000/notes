@@ -5,8 +5,7 @@ import Button from './Button.js'
 import Registration from './Registration.js'
 import Login from './Login.js'
 
-const Header = ({token, setToken}) => {
-  const [user, setUser] = useState(null)
+const Header = ({token, setToken, user, setUser}) => {
   const [showRegistration, setShowRegistration] = useState(false)
   const [showLogin, setShowLogin] = useState(false)
 
