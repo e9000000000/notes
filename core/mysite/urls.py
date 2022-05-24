@@ -32,6 +32,7 @@ api = [
 
 
 if settings.DEBUG:
+    # TODO: add a way to see sql, maybe rewrite some sql, see what is django-debug-toolbar
     from drf_spectacular.views import SpectacularAPIView
 
     urlpatterns.append(path("api/", include(api)))
