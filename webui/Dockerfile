@@ -1,4 +1,4 @@
-FROM node:20.10.7
+FROM node:latest
 
 WORKDIR /service
 ENV PATH /service/node_modules/.bin:$PATH

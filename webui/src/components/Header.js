@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { baseUrl } from '../config.js'
 import useCookie from 'react-use-cookie'
 import Button from './Button.js'
 
@@ -6,6 +7,10 @@ const Header = ({title}) => {
   const [user, setUser] = useState(null)
 
   const [token, setToken] = useCookie('token')
+
+  const register = () => {
+    // TODO: create registration popup
+  }
 
   const login = () => {
     var username = prompt("username")
@@ -18,7 +23,7 @@ const Header = ({title}) => {
         'password': password
       })
     }
-    fetch("http://localhost:8000/api/users/auth/", requestOpts)
+    fetch(baseUrl + "/api/users/auth/", requestOpts)
       .then(resp => {
         if (resp.status === 200) {
           return resp.json()
@@ -34,7 +39,7 @@ const Header = ({title}) => {
       method: 'DELETE',
       headers: { 'Authorization': 'Token ' + token}
     }
-    fetch("http://localhost:8000/api/users/unauth/", requestOpts)
+    fetch(baseUrl + "/api/users/unauth/", requestOpts)
       .then(resp => {
         if (resp.status === 204) {
           setToken('0')
@@ -45,7 +50,7 @@ const Header = ({title}) => {
   }
 
   useEffect(() => {
-    if (!token || token == '0') {
+    if (!token || token === '0') {
       setUser(null)
       return
     }
@@ -54,7 +59,7 @@ const Header = ({title}) => {
       method: 'GET',
       headers: { 'Authorization': 'Token ' + token}
     }
-    fetch('http://localhost:8000/api/users/self/', requestOpts)
+    fetch(baseUrl + '/api/users/self/', requestOpts)
       .then(resp => resp.json())
       .then(data => setUser(data))
   }, [token])
@@ -66,11 +71,14 @@ const Header = ({title}) => {
       </div>
       <div className='headerDiv'>
         {user == null ? (
-          <Button text='login' onClick={login} />
+          <>
+            <Button text='register' onClick={register} />
+            <Button text='login' onClick={login} />
+          </>
         ) : (
           <>
-          <Button text={user.username} />
-          <Button text='logout' onClick={logout} />
+            <Button text={user.username} />
+            <Button text='logout' onClick={logout} />
           </>
         )}
       </div>

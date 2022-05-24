@@ -23,9 +23,10 @@ set env variables:
 - `POSTGRES_PASSWORD` - database password
 - `NOTES_SECRET_KEY` - django secret key
 
-if postgres data directory is empty or not exists: just run
+if postgres data directory is empty or not exists: just run twise.  
+run, ctrl + c after `build_webui` is finished and run again
 ```bash
-docker-compose up --build
+docker-compose up
 ```
 
 ---
