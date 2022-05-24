@@ -43,6 +43,7 @@ GRANT ALL PRIVILEGES ON DATABASE yourDatabaseName TO sameUsernameAsDatabase;
 ```
 
 ## development
+### core
 install dependencies
 ```bash
 pip install poetry
@@ -74,3 +75,10 @@ access core api documentation with swagger ui (dev server should be ran)
 docker run --net=host swaggerapi/swagger-ui
 ```
 then explore this url `http://localhost:8000/schema`
+
+### webui
+run react dev server
+```bash
+npm install
+npm start
+```
