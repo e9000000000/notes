@@ -9,7 +9,3 @@ RUN pip install --no-cache-dir --upgrade pip \
 && poetry install --no-dev \
 && poetry config virtualenvs.create true \
 && pip uninstall --yes poetry
-
-CMD ./manage.py makemigrations && \
-./manage.py migrate && \
-gunicorn --reload -b 0.0.0.0:80 -w 4 mysite.wsgi

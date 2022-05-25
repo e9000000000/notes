@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 
 services:
@@ -10,13 +10,13 @@ services:
       - core
     depends_on:
       - core
-      - build_webui
     ports:
       - 80:80
       - 443:433
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./webui/build:/usr/share/nginx/html:ro
+
 
   core:
     container_name: core
@@ -32,13 +32,34 @@ services:
       - POSTGRES_PASSWORD
       - NOTES_SECRET_KEY
       - NOTES_DB_NAME
+    command: "gunicorn --reload -b 0.0.0.0:80 -w 4 mysite.wsgi"
 
-  build_webui:
-    container_name: build_webui
+  core-prepare:
+    container_name: core-prepare
+    build:
+      context: ./core
+    volumes:
+      - ./core:/service
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    environment:
+      - POSTGRES_PASSWORD
+      - NOTES_SECRET_KEY
+      - NOTES_DB_NAME
+    command: bash -c "./manage.py makemigrations && ./manage.py migrate"
+    profiles:
+      - prepare
+
+  build-webui:
+    container_name: build-webui
     build:
       context: ./webui
     volumes:
       - ./webui:/service
+    profiles:
+      - prepare
 
   postgres:
     container_name: postgres

@@ -29,14 +29,20 @@ set env variables:
 - `POSTGRES_PASSWORD` - database password
 - `NOTES_SECRET_KEY` - django secret key
 
-if postgres data directory is empty or not exists: just run twise.  
-run, ctrl + c after `build_webui` is finished and run again
+build frontend and make migrations:
+```bash
+docker-compose --profile prepare up --build --no-start
+docker-compose --profile run core-prepare
+docker-compose --profile run build-webui
+```
+
+run:
 ```bash
 docker-compose up
 ```
 
 ---
-if data is already initialized docker will not create database, so you have to do it manualy
+if posetgres data is already initialized docker will not create database, so you have to do it manualy
 ```bash
 docker-compose up --build --no-start
 docker-compose run -d --name postgres postgres
