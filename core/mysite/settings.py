@@ -8,6 +8,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
+
+# global todos:
+# TODO: add logging
+# TODO: add custom error handling
+# TODO: add .md support for notes text
+# TODO: add admin panel
+
 SECRET_KEY = getenv("NOTES_SECRET_KEY")
 
 DEBUG = False
